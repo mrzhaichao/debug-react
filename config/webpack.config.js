@@ -329,11 +329,15 @@ module.exports = function (webpackEnv) {
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
         // Allows for better profiling with ReactDevTools
-        ...(isEnvProductionProfile && {
-          'react-dom$': 'react-dom/profiling',
-          'scheduler/tracing': 'scheduler/tracing-profiling',
-        }),
-        ...(modules.webpackAliases || {}),
+        // ...(isEnvProductionProfile && {
+        //   'react-dom$': 'react-dom/profiling',
+        //   'scheduler/tracing': 'scheduler/tracing-profiling',
+        // }),
+        // ...(modules.webpackAliases || {}),
+        'react': path.resolve(__dirname, '../src/react/packages/react'),
+        'react-dom': path.resolve(__dirname, '../src/react/packages/react-dom'),
+        'shared': path.resolve(__dirname, '../src/react/packages/shared'),
+        'react-reconciler': path.resolve(__dirname, '../src/react/packages/react-reconciler'),
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -409,6 +413,7 @@ module.exports = function (webpackEnv) {
                 ],
                 
                 plugins: [
+                  require.resolve('@babel/plugin-transform-flow-strip-types'),
                   [
                     require.resolve('babel-plugin-named-asset-import'),
                     {
@@ -712,31 +717,31 @@ module.exports = function (webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
-      !disableESLintPlugin &&
-        new ESLintPlugin({
-          // Plugin options
-          extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
-          formatter: require.resolve('react-dev-utils/eslintFormatter'),
-          eslintPath: require.resolve('eslint'),
-          failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
-          context: paths.appSrc,
-          cache: true,
-          cacheLocation: path.resolve(
-            paths.appNodeModules,
-            '.cache/.eslintcache'
-          ),
-          // ESLint class options
-          cwd: paths.appPath,
-          resolvePluginsRelativeTo: __dirname,
-          baseConfig: {
-            extends: [require.resolve('eslint-config-react-app/base')],
-            rules: {
-              ...(!hasJsxRuntime && {
-                'react/react-in-jsx-scope': 'error',
-              }),
-            },
-          },
-        }),
+      // !disableESLintPlugin &&
+      //   new ESLintPlugin({
+      //     // Plugin options
+      //     extensions: ['js', 'mjs', 'jsx', 'ts', 'tsx'],
+      //     formatter: require.resolve('react-dev-utils/eslintFormatter'),
+      //     eslintPath: require.resolve('eslint'),
+      //     failOnError: !(isEnvDevelopment && emitErrorsAsWarnings),
+      //     context: paths.appSrc,
+      //     cache: true,
+      //     cacheLocation: path.resolve(
+      //       paths.appNodeModules,
+      //       '.cache/.eslintcache'
+      //     ),
+      //     // ESLint class options
+      //     cwd: paths.appPath,
+      //     resolvePluginsRelativeTo: __dirname,
+      //     baseConfig: {
+      //       extends: [require.resolve('eslint-config-react-app/base')],
+      //       rules: {
+      //         ...(!hasJsxRuntime && {
+      //           'react/react-in-jsx-scope': 'error',
+      //         }),
+      //       },
+      //     },
+      //   }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell webpack to provide empty mocks for them so importing them works.

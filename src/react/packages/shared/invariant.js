@@ -1,3 +1,9 @@
+/*
+ * @Author: zhaichaochao@xdf.cn
+ * @Date: 2021-03-24 10:54:48
+ * @LastEditTime: 2021-03-24 13:48:38
+ * @FilePath: /debug-react/src/react/packages/shared/invariant.js
+ */
 /**
  * Copyright (c) Facebook, Inc. and its affiliates.
  *
@@ -18,6 +24,9 @@
  */
 
 export default function invariant(condition, format, a, b, c, d, e, f) {
+  if (condition) {
+    return;
+}
   throw new Error(
     'Internal React error: invariant() is meant to be replaced at compile ' +
       'time. There is no runtime version.',
