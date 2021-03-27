@@ -101,6 +101,7 @@ function getReactRootElementInContainer(container: any) {
   }
 }
 
+// 判断是非为服务端渲染
 function shouldHydrateDueToLegacyHeuristic(container) {
   const rootElement = getReactRootElementInContainer(container);
   return !!(
@@ -121,6 +122,7 @@ function legacyCreateRootFromDOMContainer(
     let warned = false;
     let rootSibling;
     while ((rootSibling = container.lastChild)) {
+      // 将根元素里面的子元素移除掉
       if (__DEV__) {
         if (
           !warned &&
@@ -188,6 +190,8 @@ function legacyRenderSubtreeIntoContainer(
   // member of intersection type." Whyyyyyy.
   let root: RootType = (container._reactRootContainer: any);
   let fiberRoot;
+
+  // 初始化渲染 构建 fiberRootNode 节点， 以及当前current 节点  
   if (!root) {
     // Initial mount
     root = container._reactRootContainer = legacyCreateRootFromDOMContainer(

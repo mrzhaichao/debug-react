@@ -330,6 +330,7 @@ export function listenToAllSupportedEvents(rootContainerElement: EventTarget) {
     }
     (rootContainerElement: any)[listeningMarker] = true;
     allNativeEvents.forEach(domEventName => {
+      // 一个添加冒泡 一个添加捕获
       if (!nonDelegatedEvents.has(domEventName)) {
         listenToNativeEvent(
           domEventName,

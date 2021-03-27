@@ -658,6 +658,8 @@ function markUpdateLaneFromFiberToRoot(
     node = parent;
     parent = parent.return;
   }
+
+  // 判断 当前node 是否为根节点
   if (node.tag === HostRoot) {
     const root: FiberRoot = node.stateNode;
     return root;
