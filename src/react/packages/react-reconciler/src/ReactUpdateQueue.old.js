@@ -204,10 +204,13 @@ export function enqueueUpdate<State>(fiber: Fiber, update: Update<State>) {
 
   const sharedQueue: SharedQueue<State> = (updateQueue: any).shared;
   const pending = sharedQueue.pending;
+
+  // 改动链表指向
   if (pending === null) {
     // This is the first update. Create a circular list.
     update.next = update;
   } else {
+    // pending -> update -> pending.next
     update.next = pending.next;
     pending.next = update;
   }

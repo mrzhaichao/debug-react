@@ -569,6 +569,7 @@ export function scheduleUpdateOnFiber(
       (executionContext & (RenderContext | CommitContext)) === NoContext
     ) {
       // Register pending interactions on the root to avoid losing traced interaction data.
+      // 在根上注册挂起的交互，以避免丢失跟踪的交互数据。
       schedulePendingInteractions(root, lane);
 
       // This is a legacy edge case. The initial mount of a ReactDOM.render-ed
@@ -622,6 +623,8 @@ export function scheduleUpdateOnFiber(
 // work without treating it as a typical update that originates from an event;
 // e.g. retrying a Suspense boundary isn't an update, but it does schedule work
 // on a fiber.
+
+// 计算当前fiber node lane, 并返回 fiber root
 function markUpdateLaneFromFiberToRoot(
   sourceFiber: Fiber,
   lane: Lane,
@@ -630,6 +633,7 @@ function markUpdateLaneFromFiberToRoot(
   sourceFiber.lanes = mergeLanes(sourceFiber.lanes, lane);
   let alternate = sourceFiber.alternate;
   if (alternate !== null) {
+    // workInProgress 数中的 lane 同步
     alternate.lanes = mergeLanes(alternate.lanes, lane);
   }
   if (__DEV__) {

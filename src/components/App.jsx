@@ -1,3 +1,5 @@
+import Count from './Count';
+import ClassCount from './ClassCount';
 export default function Main() {
     return (
         <div className="main">
@@ -6,6 +8,8 @@ export default function Main() {
                 <p className="p1">段落一</p>
                 <p className="p2">段落二</p>
             </div>
+            <Count />
+            <ClassCount />
         </div>
     );
 }
