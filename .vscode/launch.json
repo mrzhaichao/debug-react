@@ -2,7 +2,17 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "Chrome",
+        "name": "debug in edge",
+        "request": "launch",
+        "type": "pwa-msedge",
+        "url": "http://localhost:4000",
+        "webRoot": "${workspaceRoot}/src",
+        "sourceMapPathOverrides": {
+          "webpack:///src/*": "${webRoot}/*"
+        }
+      },
+      {
+        "name": "debug in chorme",
         "type": "chrome",
         "request": "launch",
         "url": "http://localhost:4000",
