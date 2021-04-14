@@ -133,9 +133,12 @@ function createRootImpl(
     null;
   const root = createContainer(container, tag, hydrate, hydrationCallbacks);
   markContainerAsRoot(root.current, container);
+
+  // 处理container 元素问题 
   const containerNodeType = container.nodeType;
 
   if (enableEagerRootListeners) {
+    // 根据container dom 的nodeType 判读 container 是否为一个元素而非注释节点
     const rootContainerElement =
       container.nodeType === COMMENT_NODE ? container.parentNode : container;
     listenToAllSupportedEvents(rootContainerElement);

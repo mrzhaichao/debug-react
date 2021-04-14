@@ -111,6 +111,8 @@ function shouldHydrateDueToLegacyHeuristic(container) {
   );
 }
 
+
+// 移除 dom 中的子元素
 function legacyCreateRootFromDOMContainer(
   container: Container,
   forceHydrate: boolean,
