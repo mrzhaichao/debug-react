@@ -91,6 +91,7 @@ export function createEventListenerWrapper(
   );
 }
 
+// 根据不同的DOM事件分类返回不同的函数
 export function createEventListenerWrapperWithPriority(
   targetContainer: EventTarget,
   domEventName: DOMEventName,

@@ -320,6 +320,7 @@ const listeningMarker =
     .slice(2);
 
 export function listenToAllSupportedEvents(rootContainerElement: EventTarget) {
+  console.log(allNativeEvents)
   if (enableEagerRootListeners) {
     if ((rootContainerElement: any)[listeningMarker]) {
       // Performance optimization: don't iterate through events
@@ -330,7 +331,10 @@ export function listenToAllSupportedEvents(rootContainerElement: EventTarget) {
     }
     (rootContainerElement: any)[listeningMarker] = true;
     allNativeEvents.forEach(domEventName => {
-      // 一个添加冒泡 一个添加捕获
+      /**
+       * nonDelegatedEvents 为部分特殊事件列表，没有捕获和冒泡一说，所以要特殊判读，
+       * 执行部分事件的捕获或冒泡
+       */
       if (!nonDelegatedEvents.has(domEventName)) {
         listenToNativeEvent(
           domEventName,
@@ -480,6 +484,8 @@ function addTrappedEventListener(
   );
   // If passive option is not supported, then the event will be
   // active and not passive.
+
+  //  针对 addEventListener 第三个参数
   let isPassiveListener = undefined;
   if (passiveBrowserEventsSupported) {
     // Browsers introduced an intervention, making these events

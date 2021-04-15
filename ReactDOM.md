@@ -1,7 +1,7 @@
 <!--
  * @Author: chaochao
  * @Date: 2021-04-14 17:03:31
- * @LastEditTime: 2021-04-14 17:03:31
+ * @LastEditTime: 2021-04-15 17:45:49
 -->
 
 ```ts
@@ -239,5 +239,60 @@ export const LegacyHiddenComponent = 24;
     // 初始化 update queue
     function initializeUpdateQueue () {
 
+    }
+```
+
+```ts
+    
+    // 初始化事件相关  冒泡初始化 | 捕获初始化
+    function listenToNativeEvent () {
+
+    }
+
+    // 寻找根DOM中的一个数据，有就返回，没有就返回一个Set数据结构
+    function getEventListenerSet () {
+
+    }
+
+    // return   => 'click__capture' | 'click__bubble'
+    export function getListenerSetKey(
+        domEventName: DOMEventName,
+        capture: boolean,
+    ): string {
+        return `${domEventName}__${capture ? 'capture' : 'bubble'}`;
+    }
+
+    // return Function
+    // 根据不同的DOM事件分类返回不同的函数
+    function createEventListenerWrapperWithPriority () {
+
+    }
+
+    // 真正执行 addEventListener 在 react-dom/src/events/EventListener.js 中， for example
+    // 17.0 开始 event 开始绑定到 root 元素上
+    export function addEventBubbleListener(
+        target: EventTarget,
+        eventType: string,
+        listener: Function,
+    ): Function {
+        target.addEventListener(eventType, listener, false);
+        return listener;
+    }
+
+```
+
+## current 树生成链路
+```ts
+    // 开始标志
+    function legacyRenderSubtreeIntoContainer () {
+        //...
+        unbatchedUpdates(() => {
+            updateContainer(children, fiberRoot, parentComponent, callback)
+        })
+        //...
+    }
+
+    function unbatchedUpdates() {
+        
     }
 ```

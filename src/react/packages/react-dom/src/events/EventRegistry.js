@@ -11,6 +11,7 @@ import type {DOMEventName} from './DOMEventNames';
 
 import {enableCreateEventHandleAPI} from 'shared/ReactFeatureFlags';
 
+// 保存所有的Dom原生事件 Set 保证数据的唯一性
 export const allNativeEvents: Set<DOMEventName> = new Set();
 
 if (enableCreateEventHandleAPI) {
