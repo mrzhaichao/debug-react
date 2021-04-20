@@ -283,6 +283,8 @@ export const LegacyHiddenComponent = 24;
 
 ## current 树生成链路
 ```ts
+
+
     // 开始标志
     function legacyRenderSubtreeIntoContainer () {
         //...
@@ -292,7 +294,78 @@ export const LegacyHiddenComponent = 24;
         //...
     }
 
-    function unbatchedUpdates() {
-        
+    function unbatchedUpdates(fn, a) {
+        return fn(a)
     }
+
+    function updateContainer () {
+
+    }
+
+    // eventTime
+    function requestEventTime () {
+        return currentEventTime
+    }
+
+    // lane 获取当前fiber的lane
+    function requestUpdateLane (current) {
+
+    }
+
+    // 返回的是个Update数据对象
+    function createUpdate (eventTime, lane) {
+
+    }
+
+    function enqueueUpdate (current, update) {
+
+    }
+
+    function scheduleUpdateOnFiber (fiber, lane, eventTime) {
+
+    }
+```
+### 执行上下文
+```ts
+    type ExecutionContext = number;
+    // 所有的上下文类型
+    export const NoContext = /*             */ 0b0000000;
+    const BatchedContext = /*               */ 0b0000001;
+    const EventContext = /*                 */ 0b0000010;
+    const DiscreteEventContext = /*         */ 0b0000100;
+    const LegacyUnbatchedContext = /*       */ 0b0001000;
+    const RenderContext = /*                */ 0b0010000;
+    const CommitContext = /*                */ 0b0100000;
+    export const RetryAfterError = /*       */ 0b1000000;
+
+    let executionContent:ExecutionContext = NoContent;
+```
+
+### React组件类型
+```ts
+    // shared/ReactTypes.js
+    export type ReactNode =
+    | React$Element<any>
+    | ReactPortal
+    | ReactText
+    | ReactFragment
+    | ReactProvider<any>
+    | ReactConsumer<any>;
+```
+
+### 更新相关数据结构
+```ts
+    // 链表
+    export type Update<State> = {|
+        // TODO: Temporary field. Will remove this by storing a map of
+        // transition -> event time on the root.
+        eventTime: number,
+        lane: Lane,
+
+        tag: 0 | 1 | 2 | 3,
+        payload: any,
+        callback: (() => mixed) | null,
+
+        next: Update<State> | null,
+    |};
 ```

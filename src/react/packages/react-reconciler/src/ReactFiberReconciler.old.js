@@ -129,7 +129,7 @@ if (__DEV__) {
   didWarnAboutNestedUpdates = false;
   didWarnAboutFindNodeInStrictMode = {};
 }
-
+// 获取父组件的上下文
 function getContextForSubtree(
   parentComponent: ?React$Component<any, any>,
 ): Object {
@@ -253,6 +253,7 @@ export function updateContainer(
   parentComponent: ?React$Component<any, any>,
   callback: ?Function,
 ): Lane {
+  console.log(__DEV__)
   if (__DEV__) {
     onScheduleRoot(container, element);
   }
@@ -267,7 +268,7 @@ export function updateContainer(
   }
   const lane = requestUpdateLane(current);
 
-  if (enableSchedulingProfiler) {
+  if (enableSchedulingProfiler) { // react devtools 使用，不用关注
     markRenderScheduled(lane);
   }
 

@@ -519,8 +519,8 @@ export function scheduleUpdateOnFiber(
   lane: Lane,
   eventTime: number,
 ) {
-  checkForNestedUpdates();
-  warnAboutRenderPhaseUpdatesInDEV(fiber);
+  checkForNestedUpdates(); // 检查是否因为 setState 导致的死循环
+  warnAboutRenderPhaseUpdatesInDEV(fiber); // 规范错误边界  比如说 render 中 运行 setState
 
   const root = markUpdateLaneFromFiberToRoot(fiber, lane);
   if (root === null) {
@@ -1196,7 +1196,7 @@ export function discreteUpdates<A, B, C, D, R>(
 
 export function unbatchedUpdates<A, R>(fn: (a: A) => R, a: A): R {
   const prevExecutionContext = executionContext;
-  executionContext &= ~BatchedContext;
+  executionContext &= ~BatchedContext;                 // 位运算 得出新的上下文
   executionContext |= LegacyUnbatchedContext;
   try {
     return fn(a);
@@ -2956,7 +2956,7 @@ function jnd(timeElapsed: number) {
     : ceil(timeElapsed / 1960) * 1960;
 }
 
-function checkForNestedUpdates() {
+function checkForNestedUpdates() { // 检查 是否因为 setState错误使用导致的死循环
   if (nestedUpdateCount > NESTED_UPDATE_LIMIT) {
     nestedUpdateCount = 0;
     rootWithNestedUpdates = null;
