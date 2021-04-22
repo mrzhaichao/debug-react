@@ -266,7 +266,7 @@ export function updateContainer(
       warnIfNotScopedWithMatchingAct(current);
     }
   }
-  const lane = requestUpdateLane(current);
+  const lane = requestUpdateLane(current); // 获取优先级
 
   if (enableSchedulingProfiler) { // react devtools 使用，不用关注
     markRenderScheduled(lane);
@@ -316,7 +316,7 @@ export function updateContainer(
   }
 
   enqueueUpdate(current, update);
-  scheduleUpdateOnFiber(current, lane, eventTime);
+  scheduleUpdateOnFiber(current, lane, eventTime); // 调度起点
 
   return lane;
 }

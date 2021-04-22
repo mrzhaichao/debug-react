@@ -247,7 +247,7 @@ export function lanePriorityToSchedulerPriority(
 }
 
 export function getNextLanes(root: FiberRoot, wipLanes: Lanes): Lanes {
-  // Early bailout if there's no pending work left.
+  // Early bailout if there's no pending work left.   如果没有悬而未决的工作，提前救助。
   const pendingLanes = root.pendingLanes;
   if (pendingLanes === NoLanes) {
     return_highestLanePriority = NoLanePriority;
@@ -267,8 +267,8 @@ export function getNextLanes(root: FiberRoot, wipLanes: Lanes): Lanes {
     nextLanePriority = return_highestLanePriority = SyncLanePriority;
   } else {
     // Do not work on any idle work until all the non-idle work has finished,
-    // even if the work is suspended.
-    const nonIdlePendingLanes = pendingLanes & NonIdleLanes;
+    // even if the work is suspended. //在所有非空闲工作完成之前，不要处理任何空闲工作，即使工作暂停。
+    const nonIdlePendingLanes = pendingLanes & NonIdleLanes; // idle 空闲的
     if (nonIdlePendingLanes !== NoLanes) {
       const nonIdleUnblockedLanes = nonIdlePendingLanes & ~suspendedLanes;
       if (nonIdleUnblockedLanes !== NoLanes) {
@@ -303,12 +303,12 @@ export function getNextLanes(root: FiberRoot, wipLanes: Lanes): Lanes {
   }
 
   // If there are higher priority lanes, we'll include them even if they
-  // are suspended.
+  // are suspended.    如果有更高优先级的车道，即使它们被暂停，我们也会把它们包括进来
   nextLanes = pendingLanes & getEqualOrHigherPriorityLanes(nextLanes);
 
   // If we're already in the middle of a render, switching lanes will interrupt
   // it and we'll lose our progress. We should only do this if the new lanes are
-  // higher priority.
+  // higher priority.  如果我们已经在渲染的中间，切换通道会打断它，我们会失去我们的进度。只有在新车道的优先级更高的情况下，我们才应该这样做。
   if (
     wipLanes !== NoLanes &&
     wipLanes !== nextLanes &&
@@ -598,7 +598,7 @@ export function pickArbitraryLane(lanes: Lanes): Lane {
 }
 
 function pickArbitraryLaneIndex(lanes: Lanes) {
-  return 31 - clz32(lanes);
+  return 31 - clz32(lanes); // clz => Math.clz32() 函数返回一个数字在转换成 32 无符号整形数字的二进制形式后, 开头的 0 的个数
 }
 
 function laneToIndex(lane: Lane) {
@@ -671,12 +671,13 @@ export function markRootUpdated(
 
   // 不懂什么意思 
   root.suspendedLanes &= higherPriorityLanes;
-  root.pingedLanes &= higherPriorityLanes;
+  root.pingedLanes &= higherPriorityLanes; // priority 优先级
 
   const eventTimes = root.eventTimes;
   const index = laneToIndex(updateLane);
   // We can always overwrite an existing timestamp because we prefer the most
   // recent event, and we assume time is monotonically increasing.
+  //我们总是可以覆盖现有的时间戳，因为我们更喜欢最近的事件，而且我们假设时间是单调递增的。
   eventTimes[index] = eventTime;
 }
 

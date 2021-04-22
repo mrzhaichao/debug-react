@@ -370,7 +370,7 @@ function ChildReconciler(shouldTrackSideEffects) {
     }
   }
 
-  function placeSingleChild(newFiber: Fiber): Fiber {
+  function placeSingleChild(newFiber: Fiber): Fiber { // 打个新增标记
     // This is simpler for the single child case. We only need to do a
     // placement for inserting new children.
     if (shouldTrackSideEffects && newFiber.alternate === null) {

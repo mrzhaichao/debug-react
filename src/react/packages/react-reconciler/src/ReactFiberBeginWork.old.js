@@ -237,7 +237,7 @@ export function reconcileChildren(
   nextChildren: any,
   renderLanes: Lanes,
 ) {
-  if (current === null) {
+  if (current === null) { // 新组件生成
     // If this is a fresh new component that hasn't been rendered yet, we
     // won't update its child set by applying minimal side-effects. Instead,
     // we will add them all to the child before it gets rendered. That means

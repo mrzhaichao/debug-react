@@ -263,7 +263,7 @@ const RootSuspended = 3;
 const RootSuspendedWithDelay = 4;
 const RootCompleted = 5;
 
-// Describes where we are in the React execution stack
+// Describes where we are in the React execution stack   描述我们在 React 执行堆栈中的位置
 let executionContext: ExecutionContext = NoContext;
 // The root we're working on
 let workInProgressRoot: FiberRoot | null = null;
@@ -523,7 +523,7 @@ export function scheduleUpdateOnFiber(
   warnAboutRenderPhaseUpdatesInDEV(fiber); // 规范错误边界  比如说 render 中 运行 setState
 
   const root = markUpdateLaneFromFiberToRoot(fiber, lane);
-  if (root === null) {
+  if (root === null) { // 找到的 FiberRootNode 为空，抛出错误
     warnAboutUpdateOnUnmountedFiberInDEV(fiber);
     return null;
   }
@@ -558,7 +558,7 @@ export function scheduleUpdateOnFiber(
   }
 
   // TODO: requestUpdateLanePriority also reads the priority. Pass the
-  // priority as an argument to that function and this one.
+  // priority as an argument to that function and this one.  requestUpdateLanePriority 也读取优先级。将优先级作为参数传递给该函数和该函数。
   const priorityLevel = getCurrentPriorityLevel();
 
   if (lane === SyncLane) {
@@ -570,12 +570,12 @@ export function scheduleUpdateOnFiber(
     ) {
       // Register pending interactions on the root to avoid losing traced interaction data.
       // 在根上注册挂起的交互，以避免丢失跟踪的交互数据。
-      schedulePendingInteractions(root, lane);
+      schedulePendingInteractions(root, lane); // react devtools 使用？
 
       // This is a legacy edge case. The initial mount of a ReactDOM.render-ed
       // root inside of batchedUpdates should be synchronous, but layout updates
-      // should be deferred until the end of the batch.
-      performSyncWorkOnRoot(root);
+      // should be deferred until the end of the batch.   这是一个遗留的边缘案例。batchedUpdates 中 render-ed 根的初始挂载应该是同步的，但是布局更新应该推迟到批处理的末尾。
+      performSyncWorkOnRoot(root); // 同步更新入口  
     } else {
       ensureRootIsScheduled(root, eventTime);
       schedulePendingInteractions(root, lane);
@@ -629,8 +629,8 @@ function markUpdateLaneFromFiberToRoot(
   sourceFiber: Fiber,
   lane: Lane,
 ): FiberRoot | null {
-  // Update the source fiber's lanes
-  sourceFiber.lanes = mergeLanes(sourceFiber.lanes, lane);
+  // Update the source fiber's lanes  
+  sourceFiber.lanes = mergeLanes(sourceFiber.lanes, lane);  // mergeLanes   => a|b
   let alternate = sourceFiber.alternate;
   if (alternate !== null) {
     // workInProgress 数中的 lane 同步
@@ -1028,7 +1028,7 @@ function performSyncWorkOnRoot(root) {
     }
   }
 
-  if (exitStatus === RootFatalErrored) {
+  if (exitStatus === RootFatalErrored) { // 抛出错误
     const fatalError = workInProgressRootFatalError;
     prepareFreshStack(root, NoLanes);
     markRootSuspended(root, lanes);
@@ -1041,7 +1041,7 @@ function performSyncWorkOnRoot(root) {
   const finishedWork: Fiber = (root.current.alternate: any);
   root.finishedWork = finishedWork;
   root.finishedLanes = lanes;
-  commitRoot(root);
+  commitRoot(root); // 渲染开始
 
   // Before exiting, make sure there's a callback scheduled for the next
   // pending level.
@@ -1405,8 +1405,8 @@ function handleError(root, thrownValue): void {
 }
 
 function pushDispatcher() {
-  const prevDispatcher = ReactCurrentDispatcher.current;
-  ReactCurrentDispatcher.current = ContextOnlyDispatcher;
+  const prevDispatcher = ReactCurrentDispatcher.current; 
+  ReactCurrentDispatcher.current = ContextOnlyDispatcher; // 当前调度器
   if (prevDispatcher === null) {
     // The React isomorphic package does not include a default dispatcher.
     // Instead the first renderer will lazily attach one, in order to give
@@ -1496,16 +1496,16 @@ export function renderHasNotSuspendedYet(): boolean {
 function renderRootSync(root: FiberRoot, lanes: Lanes) {
   const prevExecutionContext = executionContext;
   executionContext |= RenderContext;
-  const prevDispatcher = pushDispatcher();
+  const prevDispatcher = pushDispatcher(); // React Hook 相关 
 
   // If the root or lanes have changed, throw out the existing stack
-  // and prepare a fresh one. Otherwise we'll continue where we left off.
+  // and prepare a fresh one. Otherwise we'll continue where we left off. 如果根或泳道已更改，则丢弃现有堆栈并准备一个新的。 否则，我们将从中断的地方继续。
   if (workInProgressRoot !== root || workInProgressRootRenderLanes !== lanes) {
     prepareFreshStack(root, lanes);
-    startWorkOnPendingInteractions(root, lanes);
+    startWorkOnPendingInteractions(root, lanes); // react devtools  使用 测试环境
   }
 
-  const prevInteractions = pushInteractions(root);
+  const prevInteractions = pushInteractions(root); // react devtools  使用 测试环境
 
   if (__DEV__) {
     if (enableDebugTracing) {
@@ -1526,7 +1526,7 @@ function renderRootSync(root: FiberRoot, lanes: Lanes) {
     }
   } while (true);
   resetContextDependencies();
-  if (enableSchedulerTracing) {
+  if (enableSchedulerTracing) { // 跳过
     popInteractions(((prevInteractions: any): Set<Interaction>));
   }
 
@@ -1650,15 +1650,15 @@ function performUnitOfWork(unitOfWork: Fiber): void {
   // nothing should rely on this, but relying on it here means that we don't
   // need an additional field on the work in progress.
   const current = unitOfWork.alternate;
-  setCurrentDebugFiberInDEV(unitOfWork);
+  setCurrentDebugFiberInDEV(unitOfWork); // react dev 环境使用跳过
 
   let next;
   if (enableProfilerTimer && (unitOfWork.mode & ProfileMode) !== NoMode) {
-    startProfilerTimer(unitOfWork);
+    startProfilerTimer(unitOfWork); // dev 使用
     next = beginWork(current, unitOfWork, subtreeRenderLanes);
-    stopProfilerTimerIfRunningAndRecordDelta(unitOfWork, true);
+    stopProfilerTimerIfRunningAndRecordDelta(unitOfWork, true); // react devtools使用 跳过
   } else {
-    next = beginWork(current, unitOfWork, subtreeRenderLanes);
+    next = beginWork(current, unitOfWork, subtreeRenderLanes); // next 的值为 通过 React Component 和 createFiber 生产的 一个 FiberNode
   }
 
   resetCurrentDebugFiberInDEV();
@@ -2445,7 +2445,7 @@ export function flushPassiveEffects(): boolean {
         ? NormalSchedulerPriority
         : pendingPassiveEffectsRenderPriority;
     pendingPassiveEffectsRenderPriority = NoSchedulerPriority;
-    if (decoupleUpdatePriorityFromScheduler) {
+    if (decoupleUpdatePriorityFromScheduler) { // 从调度器中分离更新优先级
       const previousLanePriority = getCurrentUpdateLanePriority();
       try {
         setCurrentUpdateLanePriority(

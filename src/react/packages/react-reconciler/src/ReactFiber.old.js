@@ -456,7 +456,7 @@ export function createFiberFromTypeAndProps(
   mode: TypeOfMode,
   lanes: Lanes,
 ): Fiber {
-  let fiberTag = IndeterminateComponent;
+  let fiberTag = IndeterminateComponent;  // Before we know whether it is function or class
   // The resolved type is set if we know what the final type will be. I.e. it's not lazy.
   let resolvedType = type;
   if (typeof type === 'function') {
