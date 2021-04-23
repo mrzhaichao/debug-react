@@ -1548,7 +1548,7 @@ function renderRootSync(root: FiberRoot, lanes: Lanes) {
     }
   }
 
-  if (enableSchedulingProfiler) {
+  if (enableSchedulingProfiler) { // react devtools 使用， 跳过
     markRenderStopped();
   }
 
